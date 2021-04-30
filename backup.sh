@@ -3,6 +3,7 @@
 # copy dot files
 cp $HOME/.bashrc .
 cp $HOME/.vimrc .
+cp $HOME/.gitconfig .
 
 # check git status
 gs="$(git status | grep -i "modified")"
