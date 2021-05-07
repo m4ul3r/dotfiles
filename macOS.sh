@@ -66,3 +66,22 @@ cd McMojave-cursors
 ./install.sh
 cd ~/Downloads
 rm -rf McMojave-curors
+
+# install wifi
+cd ~
+git clone https://github.com/EntropicEffect/rtl8822bu
+cd rtl8822bu
+sudo apt-get install build-essential dkms
+sudo dkms add .
+sudo dkms install -m 88x2bu -v 1.1
+cd ~ 
+rm -rf rtl8822bu
+
+# confirm reboot
+read -p "About to reboot computer, y for yes, anything else nah, but you should reboot this shit" -n 1 -r
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+    sudo reboot
+fi
+
+echo "I see you didn't reboot, reboot it"
