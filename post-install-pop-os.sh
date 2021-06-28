@@ -84,8 +84,8 @@ wget https://raw.githubusercontent.com/m4ul3r/dotfiles/main/.gitconfig
 wget https://raw/githubusercontent.com/m4ul3r/dotfiles/main/.tmux.conf
 
 # Download root dotfiles
-sudo wget https://raw.githubusercontent.com/m4ul3r/dotfiles/main/.ROOTBASHRC /root/.bashrc
-sudo wget https://raw.githubusercontent.com/m4ul3r/dotfiles/main/.vimrc /root/.vimrc
+#sudo wget https://raw.githubusercontent.com/m4ul3r/dotfiles/main/.ROOTBASHRC /root/.bashrc
+#sudo wget https://raw.githubusercontent.com/m4ul3r/dotfiles/main/.vimrc /root/.vimrc
 
 # Clean up
 sudo apt-get autoclean -y
