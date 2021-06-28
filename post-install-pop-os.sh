@@ -5,7 +5,7 @@
 #
 # Description:
 #   Personal Linux post install script
-#
+
 
 PKG_LIST=(
     brave-browser
@@ -62,11 +62,30 @@ sudo systemctl enable --now libvirtd
 # Setup tldr
 tldr -u
 
-# Download & dotfiles
+# change gnome terminal theme
+cd /tmp
+git clone https://github.com/arcticicestudio/nord-gnome-terminal.git
+cd nord-gnome-terminal/src
+./nord.sh
+echo "\nNord terminal theme installed - Apply changes in terminal preferences"
+
+# change shell theme to nordic-darker
+cd /tmp
+wget https://dllb2.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE2MjQ4MjMyMjMiLCJ1IjpudWxsLCJsdCI6ImRvd25sb2FkIiwicyI6IjA5MzM4ZTk2YWZmMWM4MzQ2YjlhZmNjNjFhNTlkM2VjYjA3NTQzMDE2NzAyM2M1MWIwOTAzZDgyOTgwODdhMDBlMWVlZWEwZDRlZGNiYjllOThmMjBlMWQxNmI2YTZkNWZmYTE2NTBmNDdkMjlmYzM1ZjU1NWZmOTk0OWFlZWY0IiwidCI6MTYyNDg5ODM5MSwic3RmcCI6bnVsbCwic3RpcCI6bnVsbH0.yN726QExG9uyxgz3OZofdcarhNvH8UND8PqKfZKwOco/Nordic-darker-v40.tar.xz
+tar xf Nordic-darker-v40.tar.xz
+sudo mv Nordic-darker/ /usr/share/themes/
+gsettings set org.gnome.desktop.interface gtk-theme Nordic-Darker
+
+# Download user dotfiles
+cd ~
 wget https://raw.githubusercontent.com/m4ul3r/dotfiles/main/.bashrc
 wget https://raw.githubusercontent.com/m4ul3r/dotfiles/main/.vimrc
 wget https://raw.githubusercontent.com/m4ul3r/dotfiles/main/.gitconfig
+wget https://raw/githubusercontent.com/m4ul3r/dotfiles/main/.tmux.conf
 
+# Download root dotfiles
+sudo wget https://raw.githubusercontent.com/m4ul3r/dotfiles/main/.ROOTBASHRC /root/.bashrc
+sudo wget https://raw.githubusercontent.com/m4ul3r/dotfiles/main/.vimrc /root/.vimrc
 
 # Clean up
 sudo apt-get autoclean -y
