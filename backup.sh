@@ -1,13 +1,11 @@
 #!/bin/bash
 
 # copy user dotfiles
-cp $HOME/.bashrc .
+#cp $HOME/.bashrc .
+cp $HOME/.zshrc .
 cp $HOME/.vimrc .
 cp $HOME/.gitconfig .
 cp $HOME/.tmux.conf .
-
-# copy root dotfiles
-sudo cp /root/.bashrc ./.ROOTBASHRC
 
 # check git status
 gs="$(git status | grep -i "modified")"

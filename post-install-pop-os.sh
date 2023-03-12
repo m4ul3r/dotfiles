@@ -9,29 +9,23 @@
 
 PKG_LIST=(
     brave-browser
-    virt-manager
-    qemu-kvm
-    libvirt-daemon-system
-    libvirt-clients
-    bridge-utils
     gnome-shell-extensions
     vim
-    htop
     bashtop
-    neofetch
     discord
     tldr
     openvpn
     python3-pip
     gnome-tweaks
+    zsh
 )
 
 # Ensure sudo is being ran
-#if [[ "${UID}" -ne 0 ]]
-#then
+if [[ "${UID}" -ne 0 ]]
+then
     #echo "Must be executed with sudo or as root" >&2
     #exit 1
-#fi
+fi
 
 # Update and upgrade system
 sudo apt-get update && sudo apt-get upgrade -y
@@ -54,27 +48,16 @@ for pkg_name in ${PKG_LIST[@]}; do
     fi
 done
 
-# Setup KVM
-sudo adduser $USER libvirt
-sudo adduser $USER kvm
-sudo systemctl enable --now libvirtd
-
 # Setup tldr
 tldr -u
 
-# change gnome terminal theme
-cd /tmp
-git clone https://github.com/arcticicestudio/nord-gnome-terminal.git
-cd nord-gnome-terminal/src
-./nord.sh
-echo "\nNord terminal theme installed - Apply changes in terminal preferences"
+# ohmyzsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+# zsh-syntax-highlighting
+git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+# zsh-autosuggestions
+git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 
-# change shell theme to nordic-darker
-cd /tmp
-wget https://dllb2.pling.com/api/files/download/j/eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6IjE2MjQ4MjMyMjMiLCJ1IjpudWxsLCJsdCI6ImRvd25sb2FkIiwicyI6IjA5MzM4ZTk2YWZmMWM4MzQ2YjlhZmNjNjFhNTlkM2VjYjA3NTQzMDE2NzAyM2M1MWIwOTAzZDgyOTgwODdhMDBlMWVlZWEwZDRlZGNiYjllOThmMjBlMWQxNmI2YTZkNWZmYTE2NTBmNDdkMjlmYzM1ZjU1NWZmOTk0OWFlZWY0IiwidCI6MTYyNDg5ODM5MSwic3RmcCI6bnVsbCwic3RpcCI6bnVsbH0.yN726QExG9uyxgz3OZofdcarhNvH8UND8PqKfZKwOco/Nordic-darker-v40.tar.xz
-tar xf Nordic-darker-v40.tar.xz
-sudo mv Nordic-darker/ /usr/share/themes/
-gsettings set org.gnome.desktop.interface gtk-theme Nordic-Darker
 
 # Download user dotfiles
 cd ~
@@ -82,10 +65,6 @@ wget https://raw.githubusercontent.com/m4ul3r/dotfiles/main/.bashrc
 wget https://raw.githubusercontent.com/m4ul3r/dotfiles/main/.vimrc
 wget https://raw.githubusercontent.com/m4ul3r/dotfiles/main/.gitconfig
 wget https://raw/githubusercontent.com/m4ul3r/dotfiles/main/.tmux.conf
-
-# Download root dotfiles
-#sudo wget https://raw.githubusercontent.com/m4ul3r/dotfiles/main/.ROOTBASHRC /root/.bashrc
-#sudo wget https://raw.githubusercontent.com/m4ul3r/dotfiles/main/.vimrc /root/.vimrc
 
 # Clean up
 sudo apt-get autoclean -y
