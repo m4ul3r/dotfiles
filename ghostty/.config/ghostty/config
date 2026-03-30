@@ -1,0 +1,45 @@
+window-decoration = none
+background-opacity = 0.90
+
+# Theme (matching COSMIC Gruvbox Dark)
+theme = "Gruvbox Dark"
+cursor-color = #689d6a
+selection-background = #3c3836
+selection-foreground = #ebdbb2
+
+# Font (matching cosmic-term)
+font-family = JetBrainsMono Nerd Font Mono
+font-size = 12
+adjust-cell-height = 1
+
+# Quality of life
+copy-on-select = true
+mouse-scroll-multiplier = 1
+confirm-close-surface = false
+mouse-hide-while-typing = true
+scrollback-limit = 9999999999
+
+# Bold text uses bright colors
+bold-is-bright = true
+
+# Cursor
+cursor-style = block
+cursor-style-blink = false
+
+# Window padding
+window-padding-x = 5
+window-padding-y = 5
+
+# Shell integration & behavior
+shell-integration = detect
+window-inherit-working-directory = false
+link-url = true
+
+# Disable only the copy toast
+app-notifications = no-clipboard-copy
+
+# Disable all in-app toasts
+app-notifications = false
+
+# Disable resize dimension overlay
+resize-overlay = never
