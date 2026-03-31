@@ -1,6 +1,6 @@
 STOW_DIR := $(shell pwd)
 TARGET   := $(HOME)
-PACKAGES := zsh bash git hypr waybar walker omarchy alacritty kitty ghostty nvim starship misc
+PACKAGES := zsh bash git hypr waybar walker omarchy alacritty kitty ghostty nvim tmux misc
 STOW_FLAGS := --no-folding -t $(TARGET)
 
 .PHONY: install uninstall reinstall adopt check list

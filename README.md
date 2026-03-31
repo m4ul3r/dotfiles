@@ -39,7 +39,7 @@ make list
 | kitty | `~/.config/kitty/` |
 | ghostty | `~/.config/ghostty/` |
 | nvim | `~/.config/nvim/` (LazyVim) |
-| starship | `~/.config/starship.toml` |
+| tmux | `~/.config/tmux/tmux.conf` |
 | misc | `~/.gdbinit`, `~/.XCompose` |
 
 ## Not tracked
