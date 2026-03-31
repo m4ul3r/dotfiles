@@ -2,45 +2,35 @@
 
 Stow-managed dotfiles for XPS running omarchy (Hyprland).
 
+## Structure
+
+```
+home/    -> per-app stow packages, target: ~
+config/  -> single stow package, target: ~/.config
+```
+
 ## Usage
 
 ```bash
-# Install all packages (create symlinks in ~)
-make install
-
-# Uninstall all packages (remove symlinks)
-make uninstall
-
-# Reinstall (prune stale + restow)
-make reinstall
-
-# First-time setup (adopt existing files as symlinks)
-make adopt
-
-# Dry-run check
-make check
-
-# List packages
-make list
+make install     # create symlinks
+make uninstall   # remove symlinks
+make reinstall   # prune stale + restow
+make adopt       # first-time setup (adopt existing files)
+make check       # dry-run
+make list        # list packages
 ```
 
-## Packages
+## What's tracked
 
-| Package | What it manages |
-|---------|----------------|
-| zsh | `~/.zshrc`, `~/.zshenv` |
-| bash | `~/.bashrc`, `~/.bash_profile`, `~/.profile` |
-| git | `~/.config/git/config` |
-| hypr | `~/.config/hypr/` (Hyprland) |
-| waybar | `~/.config/waybar/` |
-| walker | `~/.config/walker/` |
-| omarchy | `~/.config/omarchy/` (branding, extensions, hooks, themed) |
-| alacritty | `~/.config/alacritty/` |
-| kitty | `~/.config/kitty/` |
-| ghostty | `~/.config/ghostty/` |
-| nvim | `~/.config/nvim/` (LazyVim) |
-| tmux | `~/.config/tmux/tmux.conf` |
-| misc | `~/.gdbinit`, `~/.XCompose` |
+**home/** (per-app packages symlinked into `~`)
+- `zsh/` - `.zshrc`, `.zshenv`
+- `bash/` - `.bashrc`, `.bash_profile`, `.profile`
+- `misc/` - `.gdbinit`, `.XCompose`
+
+**config/** (single package symlinked into `~/.config/`)
+- `git/`, `hypr/`, `waybar/`, `walker/`, `omarchy/`
+- `alacritty/`, `kitty/`, `ghostty/`
+- `nvim/`, `tmux/`
 
 ## Not tracked
 
