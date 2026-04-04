@@ -21,6 +21,7 @@ setopt HIST_IGNORE_SPACE    # ignore commands starting with space
 binja() {
   /opt/binaryninja/binaryninja "$@" &
 }
+export BINARYNINJADIR=/opt/binaryninja
 
 # zoxide - smarter cd (use 'z' to jump to directories)
 export PATH="$HOME/.local/bin:$PATH"
@@ -40,11 +41,15 @@ zstyle ':completion:*' menu select
 # nim
 export PATH=$HOME/.nimble/bin:$PATH
 
+# fzf keybindings and completion (CTRL-T: files, CTRL-R: history, ALT-C: cd)
+source /usr/share/fzf/key-bindings.zsh
+source /usr/share/fzf/completion.zsh
+
 alias ls="eza"
 alias rp="realpath"
 alias vim="nvim"
 
-alias cy="claude --dangerously-skip-permissions"
+alias cy="CLAUDE_CODE_NO_FLICKER=1 claude --dangerously-skip-permissions"
 alias cyt="CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 cy"
 alias clanker="CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 cy"
 

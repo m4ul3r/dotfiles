@@ -19,6 +19,7 @@
   "modules-right": [
     "group/tray-expander",
     "bluetooth",
+    "network#vpn",
     "network",
     "pulseaudio",
     "cpu",
@@ -26,7 +27,7 @@
   ],
   "hyprland/workspaces": {
     "on-click": "activate",
-    "format": "{icon}",
+    "format": "{name}",
     "format-icons": {
       "default": "",
       "1": "1",
@@ -75,7 +76,15 @@
     "tooltip": false,
     "on-click-right": "omarchy-launch-floating-terminal-with-presentation omarchy-tz-select"
   },
+  "network#vpn": {
+    "interface": "proton0",
+    "format": "󰌾",
+    "format-disconnected": "",
+    "tooltip-format": "VPN: {ifname}",
+    "interval": 3
+  },
   "network": {
+    "interface": "wlan0",
     "format-icons": [
       "󰤯",
       "󰤟",
