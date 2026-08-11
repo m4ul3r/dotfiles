@@ -17,11 +17,11 @@ Two stow roots with different targets:
 ## Commands
 
 ```bash
-make install      # symlink everything
-make uninstall    # remove symlinks
-make reinstall    # prune stale + restow
-make adopt        # first-time: adopt existing files into the repo
-make check        # dry-run (shows what would change)
+just install      # symlink everything
+just uninstall    # remove symlinks
+just reinstall    # prune stale + restow
+just adopt        # first-time: adopt existing files into the repo
+just check        # dry-run (shows what would change)
 ```
 
 ## Key details

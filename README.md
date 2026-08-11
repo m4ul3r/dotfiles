@@ -12,12 +12,12 @@ config/  -> single stow package, target: ~/.config
 ## Usage
 
 ```bash
-make install     # create symlinks
-make uninstall   # remove symlinks
-make reinstall   # prune stale + restow
-make adopt       # first-time setup (adopt existing files)
-make check       # dry-run
-make list        # list packages
+just install     # create symlinks
+just uninstall   # remove symlinks
+just reinstall   # prune stale + restow
+just adopt       # first-time setup (adopt existing files)
+just check       # dry-run
+just list        # list packages
 ```
 
 ## What's tracked
