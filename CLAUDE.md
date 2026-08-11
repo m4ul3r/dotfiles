@@ -10,7 +10,7 @@ Stow-managed dotfiles for an XPS laptop running omarchy (Hyprland/Wayland). The 
 
 Two stow roots with different targets:
 
-- **`home/`** — per-app packages (`zsh`, `bash`, `misc`), each stowed into `$HOME`
+- **`home/`** — per-app packages (`zsh`, `bash`, `misc`, `claude`), each stowed into `$HOME`
 - **`config/`** — single stow package stowed into `~/.config`
 - **`_archive/`** — old configs kept for reference, not stowed
 
@@ -31,4 +31,6 @@ make check        # dry-run (shows what would change)
 - Omarchy v4: Hyprland config is Lua (`config/hypr/*.lua`, entry point `hyprland.lua`); `hypridle`/`hyprlock`/`hyprsunset`/`xdph` remain `.conf`. The bar/notifications are the Quickshell-based omarchy shell (`config/omarchy/shell.json` + `shell.toml`), not waybar/mako. Cloned shell plugins live in `config/omarchy/plugins/`.
 - Omarchy is a dev install at `~/.local/share/omarchy` (`$OMARCHY_PATH`); theme state lives in `~/.local/state/omarchy/` — neither is tracked here. `~/.config/hypr/.luarc.json` is omarchy-generated and untracked.
 - Pre-v4 configs (hypr `.conf` files, waybar) are in `_archive/pre-v4/`.
+- `config/omarchy/shell.json` and `shell.toml` are **snapshots, not symlinked**: the omarchy shell rewrites the live files with atomic renames (which destroy symlinks), so `config/.stow-local-ignore` excludes them from stow. After changing bar settings, resync with `cp ~/.config/omarchy/shell.{json,toml} config/omarchy/`. Note `.stow-local-ignore` replaces stow's default ignore list, so it must keep `\.git`/`\.gitignore` entries.
+- `home/claude/` tracks `~/.claude` as a strict whitelist (settings.json, statusline-command.sh, CLAUDE.md, themes/omarchy.json). The root `.gitignore` blocks everything else under it — credentials, history, sessions, caches must never be committed. Skills in `~/.claude/skills/` are symlinks to their own repos and are not tracked here.
 - The `omarchy` skill should be used when editing desktop/WM/system configs (hypr, omarchy shell, walker, ghostty, kitty, alacritty).

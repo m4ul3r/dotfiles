@@ -1,0 +1,6 @@
+\.git
+\.gitignore
+\.stow-local-ignore
+.+~
+^/omarchy/shell\.json$
+^/omarchy/shell\.toml$

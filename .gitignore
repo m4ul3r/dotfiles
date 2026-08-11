@@ -4,3 +4,13 @@
 .DS_Store
 Thumbs.db
 config/nvim/lazy-lock.json
+
+# ~/.claude is whitelist-only: never track credentials, history, sessions,
+# caches, or other machine state. Add new files as explicit exceptions.
+home/claude/.claude/*
+home/claude/.claude/themes/*
+!home/claude/.claude/settings.json
+!home/claude/.claude/statusline-command.sh
+!home/claude/.claude/CLAUDE.md
+!home/claude/.claude/themes/
+!home/claude/.claude/themes/omarchy.json

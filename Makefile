@@ -1,4 +1,4 @@
-HOME_PKGS := zsh bash misc
+HOME_PKGS := zsh bash misc claude
 STOW_FLAGS := --no-folding
 
 .PHONY: install uninstall reinstall adopt check list
