@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "user.power",
+  "name": "Power (percentage right)",
+  "version": "1.0.0",
+  "author": "Omarchy",
+  "description": "Battery, power profile, and system stats",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "Panel.qml"
+  },
+  "barWidget": {
+    "displayName": "Power (percentage right)",
+    "description": "Battery, power profile, and system stats",
+    "category": "System",
+    "allowMultiple": false
+  }
+}

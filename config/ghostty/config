@@ -1,45 +1,51 @@
+# Dynamic theme colors (follows system theme)
+config-file = ?"~/.local/state/omarchy/current/theme/ghostty.conf"
+
+# Font (matching alacritty/kitty)
+font-family = JetBrainsMono Nerd Font
+font-style = Regular
+font-size = 9
+
+# Window
 window-decoration = none
+window-theme = ghostty
+window-padding-x = 14
+window-padding-y = 14
 background-opacity = 0.90
-
-# Theme (matching COSMIC Gruvbox Dark)
-theme = "Gruvbox Dark"
-cursor-color = #689d6a
-selection-background = #3c3836
-selection-foreground = #ebdbb2
-
-# Font (matching cosmic-term)
-font-family = JetBrainsMono Nerd Font Mono
-font-size = 12
-adjust-cell-height = 1
+background-blur = true
+gtk-toolbar-style = flat
 
 # Quality of life
 copy-on-select = true
-mouse-scroll-multiplier = 1
+mouse-scroll-multiplier = 0.95
 confirm-close-surface = false
 mouse-hide-while-typing = true
 scrollback-limit = 9999999999
-
-# Bold text uses bright colors
 bold-is-bright = true
+link-url = true
+resize-overlay = never
 
 # Cursor
 cursor-style = block
 cursor-style-blink = false
 
-# Window padding
-window-padding-x = 5
-window-padding-y = 5
+# Shell integration + SSH session terminfo
+shell-integration-features = no-cursor,ssh-env
 
-# Shell integration & behavior
-shell-integration = detect
-window-inherit-working-directory = false
-link-url = true
+# Disable toasts
+app-notifications = no-clipboard-copy,no-config-reload
 
-# Disable only the copy toast
-app-notifications = no-clipboard-copy
+# Keyboard bindings
+keybind = shift+insert=paste_from_clipboard
+keybind = control+insert=copy_to_clipboard
+# Send Shift+Enter as CSI-u so TUIs can distinguish it from Enter.
+keybind = shift+enter=csi:13;2u
+# Legacy encoding sends Alt+Shift+Enter the same as Alt+Enter; send CSI-u so tmux can match M-S-Enter.
+keybind = alt+shift+enter=csi:13;4u
+keybind = super+control+shift+alt+arrow_down=resize_split:down,100
+keybind = super+control+shift+alt+arrow_up=resize_split:up,100
+keybind = super+control+shift+alt+arrow_left=resize_split:left,100
+keybind = super+control+shift+alt+arrow_right=resize_split:right,100
 
-# Disable all in-app toasts
-app-notifications = false
-
-# Disable resize dimension overlay
-resize-overlay = never
+# Fix general slowness on hyprland
+async-backend = epoll

@@ -48,12 +48,41 @@ source /usr/share/fzf/completion.zsh
 alias ls="eza"
 alias rp="realpath"
 alias vim="nvim"
+alias open="xdg-open"
 
 alias cy="CLAUDE_CODE_NO_FLICKER=1 claude --dangerously-skip-permissions"
 alias cyt="CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 cy"
 alias clanker="CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 cy"
 
+alias goblin="codex --yolo"
+
+# sshfs: beelink-home:/media/ssd/brain <-> /mnt/brain
+mount-brain() {
+  [[ -d /mnt/brain ]] || sudo mkdir -p /mnt/brain
+  [[ -O /mnt/brain ]] || sudo chown "$USER:$USER" /mnt/brain
+  if mountpoint -q /mnt/brain; then
+    echo "/mnt/brain already mounted"
+    return 0
+  fi
+  sshfs beelink-home:/media/ssd/brain /mnt/brain \
+    -o reconnect,ServerAliveInterval=15,ServerAliveCountMax=3
+}
+
+umount-brain() {
+  if ! mountpoint -q /mnt/brain; then
+    echo "/mnt/brain not mounted"
+    return 0
+  fi
+  fusermount3 -u /mnt/brain
+}
+
 # omarchy tmux dev layout
 source ~/.local/share/omarchy/default/bash/fns/tmux
 
 . "$HOME/.local/share/../bin/env"
+
+# >>> grok installer >>>
+export PATH="$HOME/.grok/bin:$PATH"
+fpath=(~/.grok/completions/zsh $fpath)
+autoload -Uz compinit && compinit -C
+# <<< grok installer <<<

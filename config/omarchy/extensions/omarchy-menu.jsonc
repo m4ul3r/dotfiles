@@ -1,0 +1,9 @@
+{
+  // Installed apps whose .desktop Keywords contain "System" (btop, the leftover
+  // COSMIC System Monitor, ...) get those keywords as menu aliases, and
+  // resolveRoute matches aliases before falling back to literal ids — so
+  // `omarchy menu toggle system` (SUPER+ESCAPE) opened the app row instead of
+  // the power menu. Give the canonical system menu an explicit "system" alias
+  // so it always wins.
+  "system": {"aliases": ["power-menu", "system"]},
+}
