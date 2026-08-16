@@ -2,7 +2,7 @@
   "permissions": {
     "defaultMode": "auto"
   },
-  "model": "claude-fable-5[1m]",
+  "model": "opus[1m]",
   "hooks": {
     "SessionStart": [
       {
@@ -26,11 +26,13 @@
     "rust-analyzer-lsp@claude-plugins-official": false
   },
   "effortLevel": "high",
+  "autoUpdatesChannel": "latest",
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
   "skipDangerousModePermissionPrompt": true,
+  "editorMode": "normal",
   "verbose": false,
   "agentPushNotifEnabled": true,
   "skipAutoPermissionPrompt": true,
