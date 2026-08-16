@@ -18,6 +18,10 @@ hl.config({
     },
   },
 })
+
+-- Vertical slide + crossfade when switching workspaces (Omarchy's default
+-- disables the "workspaces" leaf entirely; this re-enables it).
+hl.animation({ leaf = "workspaces", enabled = true, speed = 4, bezier = "easeOutQuint", style = "slidefadevert" })
 -- https://wiki.hypr.land/Configuring/Basics/Variables/#general
 -- hl.config({
 --   general = {
