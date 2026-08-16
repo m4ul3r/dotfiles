@@ -45,7 +45,35 @@ export PATH=$HOME/.nimble/bin:$PATH
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
 
-alias ls="eza"
+# eza aliases, matching omarchy's bash defaults
+# (/usr/share/omarchy/default/bash/aliases)
+if command -v eza &> /dev/null; then
+  alias ls='eza -lh --group-directories-first --icons=auto'
+  alias lsa='ls -a'
+  alias lt='eza --tree --level=2 --long --icons --git'
+  alias lta='lt -a'
+fi
+
+# cd -> zoxide: real dirs behave normally, anything else jumps
+if command -v zoxide &> /dev/null; then
+  alias cd="zd"
+  zd() {
+    if (( $# == 0 )); then
+      builtin cd ~ || return
+    elif [[ -d $1 ]]; then
+      builtin cd "$1" || return
+    else
+      if ! z "$@"; then
+        echo "Error: Directory not found"
+        return 1
+      fi
+
+      printf "\U000F17A9 "
+      pwd
+    fi
+  }
+fi
+
 alias rp="realpath"
 alias vim="nvim"
 alias open="xdg-open"
