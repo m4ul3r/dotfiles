@@ -289,7 +289,7 @@ Panel {
     }
   }
 
-  KeyboardPanel {
+  GrowKeyboardPanel {
     id: panel
     anchorItem: button
     owner: root
