@@ -16,6 +16,7 @@ for _, k in ipairs({
   "SUPER + SHIFT + H", "SUPER + SHIFT + J", "SUPER + SHIFT + K", "SUPER + SHIFT + L",
   "SUPER + ALT + H", "SUPER + ALT + J", "SUPER + ALT + K", "SUPER + ALT + L",
   "SUPER + F", "SUPER + Q", "SUPER + M", "SUPER + SHIFT + M", "SUPER + R",
+  "SUPER + W",
   "SUPER + ALT + SPACE", "SUPER + CTRL + P",
   "XF86AudioRaiseVolume", "XF86AudioLowerVolume",
   "ALT + XF86AudioRaiseVolume", "ALT + XF86AudioLowerVolume",
@@ -153,6 +154,12 @@ o.bind("SUPER + Q", "Close window", hl.dsp.window.close())
 o.bind("SUPER + F", "File manager", { omarchy = "nautilus" })
 o.bind("SUPER + M", "Maximize window", "/home/m4ul3r/.local/bin/hypr-maximize-toggle")
 o.bind("SUPER + SHIFT + M", "Full screen", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
+-- SUPER + W was: Close window (we close with SUPER + Q). The pcall keeps the
+-- keypress harmless if the scrolloverview plugin is disabled or fails to load
+-- after a Hyprland update (hyprpm plugins are ABI-sensitive).
+o.bind("SUPER + W", "Workspace overview", function()
+  pcall(function() hl.plugin.scrolloverview.overview("toggle all") end)
+end)
 
 -- Resize mode (SUPER + R to enter, Escape to exit).
 -- hyprctl keyword is unavailable under the Lua config, so swap the border

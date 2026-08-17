@@ -18,3 +18,34 @@ require("default.hypr.toggles")
 
 -- Add any other personal Hyprland configuration below.
 -- o.window("qemu", { workspace = "5" })
+
+-- Niri-style workspace overview (hyprpm plugin: scrolloverview; toggled on
+-- SUPER + W in bindings.lua). Wrapped in pcall so the config still loads when
+-- the plugin is disabled or fails ABI checks after a Hyprland update.
+-- 3-finger vertical swipe opens it; 4-finger up/down stays workspace switching
+-- (input.lua). Revert: delete this block, the SUPER + W bind, and run
+-- `hyprpm remove hyprland-scroll-overview`.
+pcall(function()
+  hl.config({
+    plugin = {
+      scrolloverview = {
+        gesture_distance = 300,
+        scale = 0.5,
+        workspace_gap = 50,
+        layout = "vertical",
+        wallpaper = 2, -- 0: global, 1: per-workspace, 2: both
+        blur = true,
+        shadow = { enabled = true, range = 50 },
+      },
+    },
+  })
+  hl.plugin.scrolloverview.gesture({ fingers = 3, direction = "vertical" })
+end)
+
+-- [key-visualizer] capture hook (managed by the plugin; safe to remove)
+-- Deviation from the plugin-written line: pcall so an error inside the
+-- plugin file can't abort the whole config load (a plugin update may
+-- rewrite this back to a bare dofile).
+local kc_path = os.getenv("HOME") .. "/.config/omarchy/plugins/felixzsh.key-visualizer/key-visualizer.lua"
+local kc_file = io.open(kc_path, "r")
+if kc_file then kc_file:close(); pcall(dofile, kc_path) end
