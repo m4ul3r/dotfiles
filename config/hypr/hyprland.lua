@@ -39,7 +39,40 @@ pcall(function()
       },
     },
   })
-  hl.plugin.scrolloverview.gesture({ fingers = 3, direction = "vertical" })
+  -- Defining this submap makes the plugin auto-activate it while the overview
+  -- is open; it doubles as the "overview open?" probe for the finger-count-
+  -- proof close gesture in input.lua (hl.get_current_submap()). Defining it
+  -- REPLACES the built-in overview keybinds and mutes regular binds inside
+  -- the overview, so the defaults are replicated here.
+  -- The dispatcher API is curried: so.overview("off") RETURNS a dispatcher
+  -- thunk — bind thunks directly; multi-step actions hl.dispatch() each one.
+  local so = hl.plugin.scrolloverview
+  hl.define_submap("scrolloverview", function()
+    hl.bind("LEFT", so.navigate("left"))
+    hl.bind("RIGHT", so.navigate("right"))
+    hl.bind("UP", so.navigate("up"))
+    hl.bind("DOWN", so.navigate("down"))
+    hl.bind("ESCAPE", so.overview("off"))
+    hl.bind("RETURN", function()
+      hl.dispatch(so.overview("select"))
+      hl.dispatch(so.overview("off"))
+    end)
+    -- Default click behavior: select clicked workspace/window, then close.
+    hl.bind("mouse:272", function()
+      hl.dispatch(so.overview("select"))
+      hl.dispatch(so.window("select"))
+      hl.dispatch(so.overview("off"))
+    end, { mouse = true })
+    hl.bind("mouse:274", so.window("close"), { mouse = true })
+    -- The toggle key must keep exiting (outside binds are inert in a submap).
+    hl.bind("SUPER + W", so.overview("off"))
+  end)
+
+  -- 3-finger up opens the overview (the plugin's gesture() API acts
+  -- immediately, unlike its curried dispatchers). The close lives on
+  -- 3/4-finger down in input.lua. Reload clears all trackpad gestures,
+  -- so this re-registers fresh each time.
+  so.gesture({ fingers = 3, direction = "up" })
 end)
 
 -- [key-visualizer] capture hook (managed by the plugin; safe to remove)

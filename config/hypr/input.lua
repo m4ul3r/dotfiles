@@ -1,15 +1,38 @@
 -- Keep only your personal input overrides here. Uncommented settings below
 -- replace Omarchy's defaults.
 
--- 4-finger swipes: up/down switch workspaces, left/right move window focus
--- NOTE: there is no hl.ungesture, so keep this block at a stable position near
--- the top of the file — reload dedupes registrations by source line, and
--- shifting these lines between reloads can leave a stale duplicate firing a
--- double workspace jump (restart Hyprland if that happens).
+-- Touchpad gestures. Every Lua config reload clears ALL trackpad gestures
+-- (Hyprland wipes the gesture manager before re-parsing), so these simply
+-- re-register fresh each time — no unbind dance needed, unlike keybinds.
+
+-- The scrolloverview dispatcher API is curried: overview("close all") RETURNS
+-- a dispatcher thunk that must be hl.dispatch()ed — a bare call is a no-op.
+local function close_overview()
+  local so = hl.plugin and hl.plugin.scrolloverview
+  if so then hl.dispatch(so.overview("close all")) end
+end
+
+-- 4-finger swipes: up = previous workspace, left/right = move window focus.
 hl.gesture({ fingers = 4, direction = "up", action = function() hl.dispatch(hl.dsp.focus({ workspace = "-1" })) end })
-hl.gesture({ fingers = 4, direction = "down", action = function() hl.dispatch(hl.dsp.focus({ workspace = "+1" })) end })
 hl.gesture({ fingers = 4, direction = "left", action = function() hl.dispatch(hl.dsp.focus({ direction = "l" })) end })
 hl.gesture({ fingers = 4, direction = "right", action = function() hl.dispatch(hl.dsp.focus({ direction = "r" })) end })
+
+-- 4-finger down: close the overview when it's open, else next workspace. The
+-- close must live on 4 fingers too: this touchpad often counts a resting
+-- thumb, so a physical 3-finger swipe frequently arrives as 4fg (the Hyprland
+-- log shows [3fg] RESET -> [4fg] SWIPE pairs). "Overview open" is detected
+-- via its auto-activated submap, defined in hyprland.lua.
+hl.gesture({ fingers = 4, direction = "down", action = function()
+  if hl.get_current_submap() == "scrolloverview" then
+    close_overview()
+  else
+    hl.dispatch(hl.dsp.focus({ workspace = "+1" }))
+  end
+end })
+
+-- 3-finger down: same close, for swipes the pad does count as 3 (no-op when
+-- the overview isn't open). 3-finger up (open) is registered in hyprland.lua.
+hl.gesture({ fingers = 3, direction = "down", action = close_overview })
 
 -- Slow down ghostty touchpad scrolling (ported from input.conf.bak.1785906759).
 o.window("com.mitchellh.ghostty", { scroll_touchpad = 0.2 })

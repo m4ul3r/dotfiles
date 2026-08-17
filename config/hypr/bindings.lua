@@ -156,12 +156,15 @@ o.bind("SUPER + Q", "Close window", hl.dsp.window.close())
 o.bind("SUPER + F", "File manager", { omarchy = "nautilus" })
 o.bind("SUPER + M", "Maximize window", "/home/m4ul3r/.local/bin/hypr-maximize-toggle")
 o.bind("SUPER + SHIFT + M", "Full screen", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
--- SUPER + W was: Close window (we close with SUPER + Q). The pcall keeps the
--- keypress harmless if the scrolloverview plugin is disabled or fails to load
--- after a Hyprland update (hyprpm plugins are ABI-sensitive).
-o.bind("SUPER + W", "Workspace overview", function()
-  pcall(function() hl.plugin.scrolloverview.overview("toggle all") end)
-end)
+-- SUPER + W was: Close window (we close with SUPER + Q).
+-- The scrolloverview dispatcher API is curried: overview("toggle all") only
+-- RETURNS a dispatcher thunk — bind that thunk itself; wrapping the call in a
+-- function discards it and the key does nothing. Guarded so the bind is
+-- skipped when the plugin isn't loaded (it lands on the post-hyprpm reload).
+local so = hl.plugin and hl.plugin.scrolloverview
+if so then
+  o.bind("SUPER + W", "Workspace overview", so.overview("toggle all"))
+end
 
 -- Resize mode (SUPER + R to enter, Escape to exit).
 -- hyprctl keyword is unavailable under the Lua config, so swap the border
