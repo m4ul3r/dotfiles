@@ -12,26 +12,20 @@ local function close_overview()
   if so then hl.dispatch(so.overview("close all")) end
 end
 
--- 4-finger swipes: up = previous workspace, left/right = move window focus.
+-- 4-finger swipes: up/down = previous/next workspace, left/right = move
+-- window focus. Workspace swipes also work inside the open overview: its
+-- window-active hook syncs the viewport to the focused window's workspace,
+-- so the overview scrolls along (except onto empty workspaces, which focus
+-- no window).
 hl.gesture({ fingers = 4, direction = "up", action = function() hl.dispatch(hl.dsp.focus({ workspace = "-1" })) end })
+hl.gesture({ fingers = 4, direction = "down", action = function() hl.dispatch(hl.dsp.focus({ workspace = "+1" })) end })
 hl.gesture({ fingers = 4, direction = "left", action = function() hl.dispatch(hl.dsp.focus({ direction = "l" })) end })
 hl.gesture({ fingers = 4, direction = "right", action = function() hl.dispatch(hl.dsp.focus({ direction = "r" })) end })
 
--- 4-finger down: close the overview when it's open, else next workspace. The
--- close must live on 4 fingers too: this touchpad often counts a resting
--- thumb, so a physical 3-finger swipe frequently arrives as 4fg (the Hyprland
--- log shows [3fg] RESET -> [4fg] SWIPE pairs). "Overview open" is detected
--- via its auto-activated submap, defined in hyprland.lua.
-hl.gesture({ fingers = 4, direction = "down", action = function()
-  if hl.get_current_submap() == "scrolloverview" then
-    close_overview()
-  else
-    hl.dispatch(hl.dsp.focus({ workspace = "+1" }))
-  end
-end })
-
--- 3-finger down: same close, for swipes the pad does count as 3 (no-op when
--- the overview isn't open). 3-finger up (open) is registered in hyprland.lua.
+-- 3-finger down: close the overview (no-op when it isn't open). Heads-up:
+-- this touchpad often counts a resting thumb, so a physical 3-finger swipe
+-- can arrive as 4fg and browse instead of close — SUPER+W/Escape/click are
+-- the reliable exits. 3-finger up (open) is registered in hyprland.lua.
 hl.gesture({ fingers = 3, direction = "down", action = close_overview })
 
 -- Slow down ghostty touchpad scrolling (ported from input.conf.bak.1785906759).
