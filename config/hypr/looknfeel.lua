@@ -99,6 +99,16 @@ hl.config({
 -- })
 
 -- https://wiki.hypr.land/Configuring/Layouts/Scrolling-Layout/
+hl.config({
+  scrolling = {
+    -- Default true: a lone remaining column balloons to fill the whole
+    -- monitor. That made SUPER + \ (consume_or_expel, bindings.lua) blow a
+    -- column back out to full width/position instead of leaving it where it
+    -- was, so keep columns at their configured width no matter how many
+    -- there are.
+    fullscreen_on_one_column = false,
+  },
+})
 -- hl.config({
 --   scrolling = {
 --     -- See only one column per screen instead of two.
