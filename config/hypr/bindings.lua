@@ -17,7 +17,7 @@ for _, k in ipairs({
   "SUPER + ALT + H", "SUPER + ALT + J", "SUPER + ALT + K", "SUPER + ALT + L",
   "SUPER + F", "SUPER + Q", "SUPER + M", "SUPER + SHIFT + M", "SUPER + R",
   "SUPER + W",
-  "SUPER + ALT + SPACE", "SUPER + CTRL + P",
+  "SUPER + ALT + SPACE", "SUPER + CTRL + P", "CTRL + ESCAPE",
   "XF86AudioRaiseVolume", "XF86AudioLowerVolume",
   "ALT + XF86AudioRaiseVolume", "ALT + XF86AudioLowerVolume",
   "XF86MonBrightnessUp", "XF86MonBrightnessDown",
@@ -149,6 +149,8 @@ o.bind("SUPER + ALT + SPACE", "Omarchy menu", "omarchy-menu toggle")
 -- The battery bar widget is our user.power clone (percentage right of icon),
 -- so the default Power-panel bind must target it instead of omarchy.power.
 o.bind("SUPER + CTRL + P", "Power", "omarchy-shell shell toggle user.power")
+-- Windows XP start menu: Ctrl+Esc is the literal Windows Start-menu shortcut.
+o.bind("CTRL + ESCAPE", "Start menu", "omarchy-shell m4ul3r.start-menu toggle")
 -- SUPER + F was: Full screen (rebound to SUPER + SHIFT + M)
 o.bind("SUPER + Q", "Close window", hl.dsp.window.close())
 o.bind("SUPER + F", "File manager", { omarchy = "nautilus" })
