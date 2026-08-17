@@ -1,13 +1,15 @@
 -- Keep only your personal input overrides here. Uncommented settings below
 -- replace Omarchy's defaults.
 
--- 4-finger swipe to switch workspaces (ported from input.conf.bak.1785906759).
+-- 4-finger swipes: up/down switch workspaces, left/right move window focus
 -- NOTE: there is no hl.ungesture, so keep this block at a stable position near
 -- the top of the file — reload dedupes registrations by source line, and
 -- shifting these lines between reloads can leave a stale duplicate firing a
 -- double workspace jump (restart Hyprland if that happens).
 hl.gesture({ fingers = 4, direction = "up", action = function() hl.dispatch(hl.dsp.focus({ workspace = "-1" })) end })
 hl.gesture({ fingers = 4, direction = "down", action = function() hl.dispatch(hl.dsp.focus({ workspace = "+1" })) end })
+hl.gesture({ fingers = 4, direction = "left", action = function() hl.dispatch(hl.dsp.focus({ direction = "l" })) end })
+hl.gesture({ fingers = 4, direction = "right", action = function() hl.dispatch(hl.dsp.focus({ direction = "r" })) end })
 
 -- Slow down ghostty touchpad scrolling (ported from input.conf.bak.1785906759).
 o.window("com.mitchellh.ghostty", { scroll_touchpad = 0.2 })
