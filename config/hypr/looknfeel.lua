@@ -22,6 +22,41 @@ hl.config({
 -- Vertical slide + crossfade when switching workspaces (Omarchy's default
 -- disables the "workspaces" leaf entirely; this re-enables it).
 hl.animation({ leaf = "workspaces", enabled = true, speed = 4, bezier = "easeOutQuint", style = "slidefadevert" })
+
+-- Group tab bar: near-opaque and themed like the terminal, replacing the
+-- default washed-out rgba(00000040)/rgba(00000020) overlays. Colors come from
+-- the live theme palette so theme switches keep matching (omarchy theme set
+-- reloads Hyprland, which re-runs this file).
+local function omarchy_theme_colors()
+  local t = {}
+  local f = io.open(os.getenv("HOME") .. "/.local/state/omarchy/current/theme/colors.toml", "r")
+  if not f then return t end
+  for line in f:lines() do
+    local k, v = line:match('^([%w_]+)%s*=%s*"#(%x%x%x%x%x%x)"')
+    if k and v then t[k] = v end
+  end
+  f:close()
+  return t
+end
+
+local tc = omarchy_theme_colors()
+local bar_bg = tc.background or "282828"
+local bar_active = tc.lighter_background or bar_bg
+local bar_fg = tc.foreground or "ffffff"
+
+hl.config({
+  group = {
+    groupbar = {
+      -- 0xe6 ~ 0.90 alpha, same as ghostty's background-opacity.
+      text_color = "rgb(" .. bar_fg .. ")",
+      text_color_inactive = "rgba(" .. bar_fg .. "90)",
+      col = {
+        active = "rgba(" .. bar_active .. "e6)",
+        inactive = "rgba(" .. bar_bg .. "e6)",
+      },
+    },
+  },
+})
 -- https://wiki.hypr.land/Configuring/Basics/Variables/#general
 -- hl.config({
 --   general = {
