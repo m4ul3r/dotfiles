@@ -56,21 +56,84 @@ o.bind("SUPER + SHIFT + ALT + X", "X Post", { webapp = "https://x.com/compose/po
 
 -- Vim-like window focus (SUPER + H/J/K/L).
 -- SUPER + J was: Toggle window split (rebound to SUPER + \)
+-- togglesplit is dwindle-only. Scrolling has no position-preserving
+-- equivalent (any consume/expel column change forces the viewport to
+-- reflow/recenter), so this is left as a silent no-op under scrolling
+-- rather than fake a "toggle" that visibly jumps windows around.
 o.bind("SUPER + BACKSLASH", "Toggle window split", hl.dsp.layout("togglesplit"))
 -- SUPER + K was: Show key bindings (rebound to SUPER + CTRL + K)
 o.bind("SUPER + CTRL + K", "Show key bindings", "omarchy-menu-keybindings")
 -- SUPER + L was: Toggle workspace layout (rebound to SUPER + .)
 o.bind("SUPER + PERIOD", "Toggle workspace layout", "omarchy-hyprland-workspace-layout-toggle")
+-- Cycle a group's tabs first on plain movefocus (SUPER + H/L below), only
+-- escaping to the next tile once you're on the group's first/last tab.
+-- (Native Hyprland behavior, off by default: PR hyprwm/Hyprland#8714.)
+hl.config({ binds = { movefocus_cycles_groupfirst = true } })
+
 o.bind("SUPER + H", "Move window focus left", hl.dsp.focus({ direction = "l" }))
 o.bind("SUPER + J", "Move window focus down", hl.dsp.focus({ direction = "d" }))
 o.bind("SUPER + K", "Move window focus up", hl.dsp.focus({ direction = "u" }))
 o.bind("SUPER + L", "Move window focus right", hl.dsp.focus({ direction = "r" }))
 
--- Vim-like window swap (SUPER + SHIFT + H/J/K/L).
-o.bind("SUPER + SHIFT + H", "Swap window to the left", hl.dsp.window.swap({ direction = "l" }))
+-- SUPER + SHIFT + H/L: manage group membership.
+--   grouped, not at edge tab -> shift the window one tab position that way
+--   grouped, at the edge tab -> eject out of the group toward that side
+--   not grouped, group there -> join it
+--   otherwise                -> fall back to a plain window swap
+-- (J/K keep the plain vim-like window swap, unaffected by grouping.)
+local function group_structure(direction)
+  local win = hl.get_active_window()
+  if not win then return end
+
+  local g = win.group
+  if g then
+    -- current_index is 1-based; move_window wraps at the edges, so gate on
+    -- the index ourselves and eject there instead of wrapping around.
+    local at_edge = (direction == "l" and g.current_index <= 1)
+      or (direction == "r" and g.current_index >= g.size)
+    if not at_edge then
+      hl.dispatch(hl.dsp.group.move_window({ forward = (direction == "r") }))
+      return
+    end
+    -- Remember a fellow member before ejecting: the scrolling layout ignores
+    -- out_of_group's direction and always drops the window on the group's
+    -- right, so if we land on the wrong side of our old group, swap over it.
+    local anchor
+    if g.size > 1 and type(g.members) == "table" then
+      for _, m in pairs(g.members) do
+        if m.address ~= win.address then anchor = m.address break end
+      end
+    end
+    hl.dispatch(hl.dsp.window.move({ out_of_group = direction }))
+    if anchor then
+      local me = hl.get_active_window()
+      local other = hl.get_window("address:" .. anchor)
+      if me and other and not me.group then
+        local wrong_side = (direction == "l" and me.at.x > other.at.x)
+          or (direction == "r" and me.at.x < other.at.x)
+        if wrong_side then
+          hl.dispatch(hl.dsp.window.swap({ direction = direction }))
+        end
+      end
+    end
+    return
+  end
+
+  -- moveintogroup is a documented no-op when there's no group in that
+  -- direction, so trying it first and checking afterward is safe.
+  hl.dispatch(hl.dsp.window.move({ into_group = direction }))
+  local after = hl.get_active_window()
+  if after and after.group then
+    return
+  end
+
+  hl.dispatch(hl.dsp.window.swap({ direction = direction }))
+end
+
+o.bind("SUPER + SHIFT + H", "Tab left / eject / join / swap left", function() group_structure("l") end)
 o.bind("SUPER + SHIFT + J", "Swap window down", hl.dsp.window.swap({ direction = "d" }))
 o.bind("SUPER + SHIFT + K", "Swap window up", hl.dsp.window.swap({ direction = "u" }))
-o.bind("SUPER + SHIFT + L", "Swap window to the right", hl.dsp.window.swap({ direction = "r" }))
+o.bind("SUPER + SHIFT + L", "Tab right / eject / join / swap right", function() group_structure("r") end)
 
 -- Vim-like move window to group (SUPER + ALT + H/J/K/L).
 -- SUPER + ALT + K was: Show Tmux key bindings
