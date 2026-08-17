@@ -19,6 +19,14 @@ require("default.hypr.toggles")
 -- Add any other personal Hyprland configuration below.
 -- o.window("qemu", { workspace = "5" })
 
+-- Keep workspaces 1-5 alive when empty (Niri-style fixed strip): Hyprland
+-- destroys empty unfocused workspaces, and the overview only shows
+-- workspaces that exist — so an empty one otherwise appears only while
+-- scrolled onto.
+for i = 1, 5 do
+  hl.workspace_rule({ workspace = tostring(i), persistent = true })
+end
+
 -- Niri-style workspace overview (hyprpm plugin: scrolloverview; toggled on
 -- SUPER + W in bindings.lua). Wrapped in pcall so the config still loads when
 -- the plugin is disabled or fails ABI checks after a Hyprland update.
