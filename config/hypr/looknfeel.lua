@@ -43,12 +43,20 @@ local tc = omarchy_theme_colors()
 local bar_bg = tc.background or "282828"
 local bar_active = tc.lighter_background or bar_bg
 local bar_fg = tc.foreground or "ffffff"
+local bar_accent = tc.accent or bar_fg
 
 hl.config({
   group = {
     groupbar = {
-      -- 0xe6 ~ 0.90 alpha, same as ghostty's background-opacity.
-      text_color = "rgb(" .. bar_fg .. ")",
+      -- 0xe6 ~ 0.90 alpha, same as ghostty's background-opacity; with blur
+      -- the tabs get the same frosted-glass treatment as the terminal.
+      blur = true,
+      -- Round each tab like the windows (decoration.rounding = 8);
+      -- round_only_edges would round just the bar's outer corners.
+      gradient_rounding = 8,
+      gradient_round_only_edges = false,
+      -- Active tab title in the theme accent, echoing the active border.
+      text_color = "rgb(" .. bar_accent .. ")",
       text_color_inactive = "rgba(" .. bar_fg .. "90)",
       col = {
         active = "rgba(" .. bar_active .. "e6)",
