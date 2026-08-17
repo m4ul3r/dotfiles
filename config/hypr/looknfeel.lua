@@ -48,11 +48,9 @@ local bar_accent = tc.accent or bar_fg
 hl.config({
   group = {
     groupbar = {
-      -- 0xe6 ~ 0.90 alpha, same as ghostty's background-opacity. No blur:
-      -- groupbar blur leaves smeared horizontal trails above the window
-      -- while the bar's open/close animation runs, and at this alpha the
-      -- frosted effect was invisible anyway.
-      blur = false,
+      -- 0xe6 ~ 0.90 alpha, same as ghostty's background-opacity; with blur
+      -- the tabs get the same frosted-glass treatment as the terminal.
+      blur = true,
       -- Round each tab like the windows (decoration.rounding = 8);
       -- round_only_edges would round just the bar's outer corners.
       gradient_rounding = 8,
