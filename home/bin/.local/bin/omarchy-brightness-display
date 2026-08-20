@@ -1,0 +1,46 @@
+#!/bin/bash
+
+# Shadows /home/m4ul3r/.local/share/omarchy/bin/omarchy-brightness-display.
+# Same behavior, but the lower decrement floor is 0% instead of 1%.
+
+step="${1:-+5%}"
+
+if omarchy-hyprland-monitor-focused-apple; then
+  omarchy-brightness-display-apple "$step"
+  exit
+fi
+
+device="$(ls -1 /sys/class/backlight 2>/dev/null | head -n1)"
+for candidate in amdgpu_bl* intel_backlight acpi_video*; do
+  if [[ -e /sys/class/backlight/$candidate ]]; then
+    device="$candidate"
+    break
+  fi
+done
+
+current=$(brightnessctl -d "$device" -m | cut -d',' -f4 | tr -d '%')
+
+if [[ $step == "+5%" ]]; then
+  if (( current < 5 )); then
+    (( target = current + 1 ))
+  else
+    (( target = current + 5 ))
+  fi
+
+  (( target > 100 )) && target=100
+  step="$target%"
+elif [[ $step == "5%-" ]]; then
+  if (( current <= 5 )); then
+    (( target = current - 1 ))
+  else
+    (( target = current - 5 ))
+  fi
+
+  (( target < 0 )) && target=0
+  step="$target%"
+fi
+
+brightnessctl -d "$device" set "$step" >/dev/null
+
+# v4 replaced swayosd with the Quickshell OSD
+omarchy-osd -i brightness -p "$(brightnessctl -d "$device" -m | cut -d',' -f4 | tr -d '%')"

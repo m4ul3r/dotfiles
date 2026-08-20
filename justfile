@@ -1,4 +1,4 @@
-home_pkgs := "zsh bash misc claude"
+home_pkgs := "zsh bash misc claude bin"
 stow_flags := "--no-folding"
 
 # symlink everything

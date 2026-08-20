@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Called by udev when AC power is plugged or unplugged.
+# Expects POWER_STATUS=1 (plugged) or POWER_STATUS=0 (unplugged) as $1.
+
+SOUND_DIR="/usr/share/sounds/freedesktop/stereo"
+POWER_STATUS="$1"
+
+# Resolve the user's runtime directory for notify-send
+export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(id -u)/bus"
+
+if [[ "$POWER_STATUS" == "1" ]]; then
+  notify-send -u normal "󱐋 Plugged in" "AC power connected" -i battery-full-charging -t 5000
+  mpv --no-video "$SOUND_DIR/power-plug.oga" >/dev/null 2>&1
+else
+  notify-send -u normal "󱐌 Unplugged" "Running on battery" -i battery-caution -t 5000
+  mpv --no-video "$SOUND_DIR/power-unplug.oga" >/dev/null 2>&1
+fi

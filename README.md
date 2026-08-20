@@ -26,6 +26,10 @@ just list        # list packages
 - `zsh/` - `.zshrc`, `.zshenv` (oh-my-zsh crunch, zoxide `zd`, RE/agent aliases)
 - `bash/` - `.bashrc`, `.bash_profile`, `.profile` (thin shims sourcing omarchy defaults)
 - `misc/` - `.gdbinit` (pwndbg), `.gdbearlyinit` (quiet startup), `.XCompose`
+- `bin/` - hand-written `~/.local/bin` helpers: `hypr-maximize-toggle` (SUPER+M
+  scrolling-layout workaround), `omarchy-brightness-display` (0%-floor fork that
+  shadows the omarchy bin), `omarchy-power-notify` (udev-triggered AC notify;
+  the udev rule itself lives outside this repo)
 - `claude/` - `~/.claude` as a whitelist-only package: settings.json, CLAUDE.md,
   statusline-command.sh, themes/omarchy.json. Everything else under `~/.claude`
   (credentials, history, sessions, skills) is blocked by `.gitignore`.
@@ -59,9 +63,8 @@ into the repo manually (`cp` from the live path):
 - `~/.config/nvim/lua/config/remote_clipboard.lua` - installed by omarchy
   migration `1781587663`; `options.lua` pcall-guards the require so a fresh
   stow works before that migration runs
-- `~/.local/bin/` helpers referenced by absolute path in `bindings.lua`
-  (`hypr-maximize-toggle`, `omarchy-brightness-display`) and
-  `~/.claude/hooks/herdr-agent-state.sh` - external to this repo
+- `~/.claude/hooks/herdr-agent-state.sh` - referenced by the SessionStart hook
+  in settings.json, but installed and managed by herdr, not this repo
 
 ## Dependencies
 

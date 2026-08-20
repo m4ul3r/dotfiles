@@ -1,0 +1,34 @@
+#!/bin/bash
+# Maximize-toggle that works in both the dwindle and scrolling Hyprland layouts.
+#
+# dwindle: native `fullscreen 1` (maximize) already toggles correctly.
+# scrolling (Hyprland 0.55.x): `fullscreen 1` is reinterpreted as a one-way
+#   "make this column full-width" action and resets the window's fullscreen mode
+#   to NONE, so a second press never un-maximizes
+#   (src/layout/algorithm/tiled/scrolling/ScrollingAlgorithm.cpp:987). We emulate
+#   a toggle *statelessly*: if the active column already fills the screen width,
+#   restore it to the configured default width; otherwise expand it to full.
+
+layout=$(hyprctl activeworkspace -j | jq -r '.tiledLayout')
+
+if [ "$layout" != "scrolling" ]; then
+  # Hyprland 0.56+ with a Lua config evaluates dispatch args as Lua expressions;
+  # the legacy "fullscreen 1" hyprlang form is a syntax error there.
+  hyprctl dispatch 'hl.dsp.window.fullscreen({ mode = "maximized" })'
+  exit 0
+fi
+
+def=$(hyprctl getoption scrolling:column_width -j | jq -r '.float')
+case "$def" in '' | null) def=0.5 ;; esac
+
+# Logical width of the focused monitor (physical width / scale) and the active
+# window's current width, then decide if the column already spans the screen.
+read -r monw scale < <(hyprctl monitors -j | jq -r '.[] | select(.focused) | "\(.width) \(.scale)"')
+winw=$(hyprctl activewindow -j | jq -r '.size[0]')
+full=$(awk -v w="$winw" -v m="$monw" -v s="$scale" 'BEGIN { print (m > 0 && (w / (m / s)) >= 0.9) ? 1 : 0 }')
+
+if [ "$full" = "1" ]; then
+  hyprctl dispatch "hl.dsp.layout('colresize ${def}')"
+else
+  hyprctl dispatch "hl.dsp.layout('colresize 1.0')"
+fi
