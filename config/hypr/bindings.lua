@@ -154,7 +154,7 @@ o.bind("SUPER + CTRL + P", "Power", "omarchy-shell shell toggle user.power")
 -- SUPER + F was: Full screen (rebound to SUPER + SHIFT + M)
 o.bind("SUPER + Q", "Close window", hl.dsp.window.close())
 o.bind("SUPER + F", "File manager", { omarchy = "nautilus" })
-o.bind("SUPER + M", "Maximize window", "/home/m4ul3r/.local/bin/hypr-maximize-toggle")
+o.bind("SUPER + M", "Maximize window", os.getenv("HOME") .. "/.local/bin/hypr-maximize-toggle")
 o.bind("SUPER + SHIFT + M", "Full screen", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
 -- SUPER + W was: Close window (we close with SUPER + Q).
 -- The scrolloverview dispatcher API is curried: overview("toggle all") only
@@ -202,7 +202,7 @@ o.bind("ALT + XF86AudioRaiseVolume", "Volume up precise", "omarchy-audio-output-
 o.bind("ALT + XF86AudioLowerVolume", "Volume down precise", "omarchy-audio-output-volume -1 && " .. volsound, { locked = true, repeating = true })
 
 -- Brightness: shadow upstream binds with absolute path so the local override in ~/.local/bin wins.
-local brightness = "/home/m4ul3r/.local/bin/omarchy-brightness-display"
+local brightness = os.getenv("HOME") .. "/.local/bin/omarchy-brightness-display"
 o.bind("XF86MonBrightnessUp", "Brightness up", brightness .. " +5%", { locked = true, repeating = true })
 o.bind("XF86MonBrightnessDown", "Brightness down", brightness .. " 5%-", { locked = true, repeating = true })
 o.bind("SHIFT + XF86MonBrightnessUp", "Brightness maximum", brightness .. " 100%", { locked = true, repeating = true })
