@@ -107,19 +107,10 @@ hl.config({
 -- })
 
 -- https://wiki.hypr.land/Configuring/Layouts/Scrolling-Layout/
-hl.config({
-  scrolling = {
-    -- Default true: a lone remaining column balloons to fill the whole
-    -- monitor. That made SUPER + \ (consume_or_expel, bindings.lua) blow a
-    -- column back out to full width/position instead of leaving it where it
-    -- was, so keep columns at their configured width no matter how many
-    -- there are.
-    fullscreen_on_one_column = false,
-  },
-})
--- hl.config({
---   scrolling = {
---     -- See only one column per screen instead of two.
---     column_width = 0.97,
---   },
--- })
+-- Stock scrolling behavior kept on purpose: a lone column fills the monitor
+-- (fullscreen_on_one_column, default true) and new columns open at Omarchy's
+-- 0.49 default, so a second window yields two per screen and SUPER + M
+-- (hypr-maximize-toggle) restores to a usable half width. Known trade-off:
+-- SUPER + \ expel that leaves a lone column balloons it to full width.
+-- fullscreen_on_one_column = false was tried and reverted — it left a single
+-- terminal as a centered half-width strip and broke SUPER + M's restore.
