@@ -4,3 +4,4 @@
 .+~
 ^/omarchy/shell\.json$
 ^/omarchy/shell\.toml$
+^/alacritty/alacritty\.toml$
