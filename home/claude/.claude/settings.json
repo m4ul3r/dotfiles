@@ -2,7 +2,7 @@
   "permissions": {
     "defaultMode": "auto"
   },
-  "model": "opus[1m]",
+  "model": "claude-fable-5[1m]",
   "hooks": {
     "SessionStart": [
       {
@@ -25,7 +25,7 @@
     "clangd-lsp@claude-plugins-official": true,
     "rust-analyzer-lsp@claude-plugins-official": false
   },
-  "effortLevel": "high",
+  "effortLevel": "xhigh",
   "autoUpdatesChannel": "latest",
   "voice": {
     "enabled": true,
