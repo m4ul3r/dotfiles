@@ -1,0 +1,3 @@
+# Suppress the GNU license/version banner on startup (gdb >= 11 reads this
+# before any output; ~/.gdbinit is too late to hide it).
+set startup-quietly on
