@@ -31,17 +31,14 @@ hl.gesture({ fingers = 3, direction = "down", action = close_overview })
 -- Slow down ghostty touchpad scrolling (ported from input.conf.bak.1785906759).
 o.window("com.mitchellh.ghostty", { scroll_touchpad = 0.2 })
 
--- Disable focus-follows-mouse: window focus changes only on click, not on
--- cursor movement (Omarchy's default is follow_mouse = 1).
+-- Focus follows mouse: hovering a window focuses it (matches Omarchy's
+-- default of follow_mouse = 1, stated explicitly here). Cursor warping on
+-- keybind focus stays at Hyprland's default (no_warps = false) — with
+-- hover-focus, a non-warping cursor would steal focus back on the first
+-- mouse twitch after a keybind focus change.
 hl.config({
   input = {
-    follow_mouse = 0,
-  },
-  -- Stop the cursor from warping to the center of a window when focus
-  -- changes via keybind (e.g. SUPER + L / movefocus) or other non-hover
-  -- focus changes (Hyprland's default is no_warps = false).
-  cursor = {
-    no_warps = true,
+    follow_mouse = 1,
   },
 })
 
