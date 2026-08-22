@@ -10,6 +10,12 @@ hl.config({
     -- Match active_opacity so fullscreen keeps the same frosted-glass blend
     -- instead of going darker (fullscreen swaps active_opacity for this).
     fullscreen_opacity = 0.92,
+    -- Scratchpad (SUPER + S) overlay: dim the workspace underneath hard enough
+    -- that btop/the scratchpad window reads as the foreground. Hyprland's
+    -- default 0.2 barely touched a bright browser window. Note the value is
+    -- latched when the special workspace opens, so a live `hyprctl reload`
+    -- only shows up after the next SUPER + S close/open.
+    dim_special = 0.65,
     blur = {
       enabled = true,
       size = 6,
