@@ -41,6 +41,8 @@ for _, k in ipairs({
 	"SUPER + SHIFT + J",
 	"SUPER + SHIFT + K",
 	"SUPER + SHIFT + L",
+	"SUPER + SHIFT + LEFT", -- default: generic swapwindow
+	"SUPER + SHIFT + RIGHT", -- default: generic swapwindow
 	"SUPER + ALT + H",
 	"SUPER + ALT + J",
 	"SUPER + ALT + K",
@@ -102,7 +104,12 @@ o.bind("SUPER + SHIFT + ALT + X", "X Post", { webapp = "https://x.com/compose/po
 -- equivalent (any consume/expel column change forces the viewport to
 -- reflow/recenter), so this is left as a silent no-op under scrolling
 -- rather than fake a "toggle" that visibly jumps windows around.
-o.bind("SUPER + BACKSLASH", "Toggle window split", hl.dsp.layout("togglesplit"))
+o.bind("SUPER + BACKSLASH", "Toggle window split", function()
+	local workspace = hl.get_active_workspace()
+	if workspace and workspace.tiled_layout == "dwindle" then
+		hl.dispatch(hl.dsp.layout("togglesplit"))
+	end
+end)
 -- SUPER + K was: Show key bindings (rebound to SUPER + CTRL + K)
 o.bind("SUPER + CTRL + K", "Show key bindings", "omarchy-menu-keybindings")
 -- SUPER + L was: Toggle workspace layout (rebound to SUPER + .)
@@ -117,11 +124,32 @@ o.bind("SUPER + J", "Move window focus down", hl.dsp.focus({ direction = "d" }))
 o.bind("SUPER + K", "Move window focus up", hl.dsp.focus({ direction = "u" }))
 o.bind("SUPER + L", "Move window focus right", hl.dsp.focus({ direction = "r" }))
 
+-- Keep a scrolling column's width attached to its window when moving it
+-- horizontally. Dwindle has no columns, so retain its normal window swap.
+local function swap_horizontal(direction)
+	local workspace = hl.get_active_workspace()
+	if workspace and workspace.tiled_layout == "scrolling" then
+		hl.dispatch(hl.dsp.layout("swapcol " .. direction))
+		return
+	end
+
+	hl.dispatch(hl.dsp.window.swap({ direction = direction }))
+end
+
+-- Override Omarchy's generic horizontal arrow swaps with the same
+-- layout-aware behavior as the Vim-style bindings below.
+o.bind("SUPER + SHIFT + LEFT", "Swap column/window to the left", function()
+	swap_horizontal("l")
+end)
+o.bind("SUPER + SHIFT + RIGHT", "Swap column/window to the right", function()
+	swap_horizontal("r")
+end)
+
 -- SUPER + SHIFT + H/L: manage group membership.
 --   grouped, not at edge tab -> shift the window one tab position that way
 --   grouped, at the edge tab -> eject out of the group toward that side
 --   not grouped, group there -> join it
---   otherwise                -> fall back to a plain window swap
+--   otherwise                -> swap a scrolling column or a dwindle window
 -- (J/K keep the plain vim-like window swap, unaffected by grouping.)
 local function group_structure(direction)
 	local win = hl.get_active_window()
@@ -158,7 +186,7 @@ local function group_structure(direction)
 				local wrong_side = (direction == "l" and me.at.x > other.at.x)
 					or (direction == "r" and me.at.x < other.at.x)
 				if wrong_side then
-					hl.dispatch(hl.dsp.window.swap({ direction = direction }))
+					swap_horizontal(direction)
 				end
 			end
 		end
@@ -173,7 +201,7 @@ local function group_structure(direction)
 		return
 	end
 
-	hl.dispatch(hl.dsp.window.swap({ direction = direction }))
+	swap_horizontal(direction)
 end
 
 o.bind("SUPER + SHIFT + H", "Tab left / eject / join / swap left", function()
