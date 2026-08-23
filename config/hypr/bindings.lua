@@ -100,14 +100,74 @@ o.bind("SUPER + SHIFT + ALT + X", "X Post", { webapp = "https://x.com/compose/po
 
 -- Vim-like window focus (SUPER + H/J/K/L).
 -- SUPER + J was: Toggle window split (rebound to SUPER + \)
--- togglesplit is dwindle-only. Scrolling has no position-preserving
--- equivalent (any consume/expel column change forces the viewport to
--- reflow/recenter), so this is left as a silent no-op under scrolling
--- rather than fake a "toggle" that visibly jumps windows around.
+-- Dwindle changes the split orientation. In scrolling, remember which side
+-- the active window came from so the second press can return it there. Native
+-- consume_or_expel does not remember this: consuming "prev" must be paired
+-- with expelling "next", and vice versa.
+local scrolling_split_origins = {}
+
+local function toggle_scrolling_split()
+	local win = hl.get_active_window()
+	local workspace = hl.get_active_workspace()
+	if not win or not workspace or win.floating then
+		return
+	end
+
+	local direction = hl.get_config("scrolling.direction")
+	local vertical = direction == "up" or direction == "down"
+	local forward_sign = (direction == "left" or direction == "up") and -1 or 1
+	local coordinate = vertical and win.at.y or win.at.x
+	local has_prev = false
+	local has_next = false
+	local shares_column = false
+
+	for _, other in pairs(hl.get_workspace_windows(workspace)) do
+		if other.address ~= win.address and not other.floating then
+			local other_coordinate = vertical and other.at.y or other.at.x
+			local distance = (other_coordinate - coordinate) * forward_sign
+			if math.abs(distance) <= 1 then
+				shares_column = true
+			elseif distance < 0 then
+				has_prev = true
+			else
+				has_next = true
+			end
+		end
+	end
+
+	local key = win.stable_id or win.address
+	local origin = scrolling_split_origins[key]
+	if origin and shares_column then
+		local restore_direction = origin == "prev" and "next" or "prev"
+		scrolling_split_origins[key] = nil
+		hl.dispatch(hl.dsp.layout("consume_or_expel " .. restore_direction))
+		return
+	end
+
+	-- If another action moved the window after the first press, its saved
+	-- origin is no longer trustworthy. Treat this as a fresh toggle.
+	scrolling_split_origins[key] = nil
+
+	if shares_column then
+		-- There is no known origin for a column assembled by another action;
+		-- expel in the layout's forward direction as a predictable fallback.
+		hl.dispatch(hl.dsp.layout("consume_or_expel next"))
+		return
+	end
+
+	local consume_direction = has_prev and "prev" or (has_next and "next" or nil)
+	if consume_direction then
+		scrolling_split_origins[key] = consume_direction
+		hl.dispatch(hl.dsp.layout("consume_or_expel " .. consume_direction))
+	end
+end
+
 o.bind("SUPER + BACKSLASH", "Toggle window split", function()
 	local workspace = hl.get_active_workspace()
 	if workspace and workspace.tiled_layout == "dwindle" then
 		hl.dispatch(hl.dsp.layout("togglesplit"))
+	elseif workspace and workspace.tiled_layout == "scrolling" then
+		toggle_scrolling_split()
 	end
 end)
 -- SUPER + K was: Show key bindings (rebound to SUPER + CTRL + K)
