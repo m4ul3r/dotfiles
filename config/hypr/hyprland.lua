@@ -66,3 +66,6 @@ end)
 local kc_path = os.getenv("HOME") .. "/.config/omarchy/plugins/felixzsh.key-visualizer/key-visualizer.lua"
 local kc_file = io.open(kc_path, "r")
 if kc_file then kc_file:close(); pcall(dofile, kc_path) end
+
+-- Added by hyprmoncfg: its generated monitor rules load last, so nothing before this can override the applied layout.
+dofile(os.getenv("HOME") .. "/.config/hypr/hyprmoncfg-monitors.lua")
