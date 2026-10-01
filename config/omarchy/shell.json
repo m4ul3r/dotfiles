@@ -1,19 +1,21 @@
 {
   "bar": {
-    "centerAnchor": "omarchy.clock",
+    "centerAnchor": "",
     "layout": {
       "center": [
+        {
+          "id": "omarchy.keyboard-layout"
+        },
         {
           "id": "omarchy.indicators"
         },
         {
+          "birthYear": 0,
           "format": "dddd HH:mm",
           "formatAlt": "d MMMM 'W'ww yyyy",
           "id": "omarchy.clock",
+          "lifeExpectancy": 20,
           "verticalFormat": "HH\n—\nmm"
-        },
-        {
-          "id": "omarchy.keyboard-layout"
         },
         {
           "id": "omarchy.weather"
@@ -27,12 +29,32 @@
           "id": "omarchy.menu"
         },
         {
-          "id": "omarchy.workspaces"
+          "id": "tornikegomareli.spaces",
+          "activeStyle": "accent",
+          "animationSpeed": "fast",
+          "density": "roomy",
+          "dimUnfocused": true,
+          "focusedTitle": false,
+          "groupApps": false,
+          "hideEmpty": false,
+          "iconSize": 12,
+          "iconStyle": "color",
+          "labelStyle": "number",
+          "perMonitor": false,
+          "persistentWorkspaces": 5,
+          "previewLive": false,
+          "showApps": "hover"
         }
       ],
       "right": [
         {
           "id": "omarchy.tray"
+        },
+        {
+          "id": "crmne.hyprmoncfg"
+        },
+        {
+          "id": "felixzsh.key-visualizer"
         },
         {
           "id": "omarchy.agents"
@@ -56,12 +78,29 @@
       ]
     },
     "position": "top",
-    "transparent": false
+    "transparent": false,
+    "id": "omarchy.bar"
   },
+  "cloneSourceRestores": [
+    "io.github.sirjul1337.lock-explorer",
+    "m4ul3r.notifications"
+  ],
+  "disabledPlugins": [
+    "omarchy.lock",
+    "omarchy.notifications"
+  ],
   "idle": {
     "lock": 300,
     "screensaver": 150
   },
-  "plugins": [],
+  "plugins": [
+    {
+      "id": "io.github.sirjul1337.lock-explorer",
+      "design": "split"
+    },
+    {
+      "id": "m4ul3r.notifications"
+    }
+  ],
   "version": 1
 }

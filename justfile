@@ -1,5 +1,5 @@
 home_pkgs := "zsh bash misc claude bin"
-stow_flags := "--no-folding"
+stow_flags := "--no-folding --ignore='[.]bak([.].*)?$'"
 
 # symlink everything
 install:
@@ -45,13 +45,18 @@ adopt:
     echo "Adopting config..."
     stow --adopt {{stow_flags}} -t "$HOME/.config" config
 
-# dry-run (shows what would change)
+# dry-run all packages; return failure if any package conflicts
 check:
     #!/usr/bin/env bash
+    set -uo pipefail
+    failed=0
     for pkg in {{home_pkgs}}; do
-        stow -n -d home {{stow_flags}} -t "$HOME" "$pkg" 2>&1 || true
+        echo "Checking $pkg..."
+        stow -n -d home {{stow_flags}} -t "$HOME" "$pkg" 2>&1 || failed=1
     done
-    stow -n {{stow_flags}} -t "$HOME/.config" config 2>&1 || true
+    echo "Checking config..."
+    stow -n {{stow_flags}} -t "$HOME/.config" config 2>&1 || failed=1
+    exit "$failed"
 
 # list packages
 list:

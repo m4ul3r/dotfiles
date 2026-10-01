@@ -16,9 +16,14 @@ just install     # create symlinks
 just uninstall   # remove symlinks
 just reinstall   # prune stale + restow
 just adopt       # first-time setup (adopt existing files)
-just check       # dry-run
+just check       # dry-run all packages; nonzero exit if any package conflicts
 just list        # list packages
 ```
+
+Git and all Stow recipes ignore `*.bak` and `*.bak.*` backup files. `just check`
+reports all package conflicts before returning failure. If an update replaces a
+managed symlink with a regular file, compare its contents before adopting it;
+`just adopt` imports live files into the repository.
 
 ## What's tracked
 
@@ -44,7 +49,10 @@ just list        # list packages
 - `alacritty/` - fallback terminal (snapshot, see below)
 - `nvim/` - LazyVim, omarchy theme hot-reload, transparency overrides
 - `tmux/` - C-a prefix, vi copy mode, M-Enter splits, transparent theme
-- `git/`, `walker/`
+- `git/` - Git LFS and GitHub/Gist credential helpers via
+  `mise exec -- gh auth git-credential`, using the configured gh version without
+  hardcoding a version directory or running the Omarchy auto-install wrapper
+- `walker/`
 
 ## Snapshots (tracked but not symlinked)
 
@@ -65,11 +73,19 @@ into the repo manually (`cp` from the live path):
   stow works before that migration runs
 - `~/.claude/hooks/herdr-agent-state.sh` - referenced by the SessionStart hook
   in settings.json, but installed and managed by herdr, not this repo
+- `~/.config/hypr/hyprmoncfg-monitors.lua` and hyprmoncfg profiles - generated,
+  machine-specific monitor state. As of 2026-10-01, hyprmoncfg is in unmanaged
+  mode, so `hyprland.lua` intentionally does not load the generated file.
+  `monitors.lua` supplies the fallback display configuration. If monitor
+  management is enabled again, hyprmoncfg's generated include must load last.
 
 ## Dependencies
 
-Installed outside this repo; the hypr config expects them but degrades to
-no-ops (pcall guards) when they're missing.
+GNU Stow and just manage installation. The Git credential helpers require Mise
+with gh configured and authenticated; Git LFS repositories require git-lfs.
+
+The following Hyprland plugin is installed outside this repo; its configuration
+and bindings are guarded when it is missing.
 
 - [hyprland-scroll-overview](https://github.com/yayuuu/hyprland-scroll-overview) -
   niri-style workspace overview (`SUPER + W`, 3-finger vertical swipe).
@@ -82,3 +98,18 @@ no-ops (pcall guards) when they're missing.
   ```
 
   ABI-sensitive: rerun `hyprpm update` after Hyprland updates to rebuild.
+
+The shell snapshot also references externally installed plugins:
+
+- `tornikegomareli.spaces` - `https://github.com/tornikegomareli/omarchy-spaces.git`
+- `crmne.hyprmoncfg` - `https://github.com/crmne/omarchy-hyprmoncfg.git`
+- `felixzsh.key-visualizer` - `https://github.com/felixzsh/omarchy-key-visualizer.git`
+- `io.github.sirjul1337.lock-explorer` - `https://github.com/SirJul1337/omarchy-lock-explorer.git`
+- `m4ul3r.notifications` - local clone of `omarchy.notifications`, maintained
+  outside this repo. Its source needs a separate backup; the shell snapshot
+  contains its selection, not its implementation.
+
+Restore these plugins before applying the shell snapshot on a fresh machine,
+especially the lock and notification replacements. The tracked `user.power`
+fork is active; `m4ul3r.workspaces` is retained but the current bar uses
+`tornikegomareli.spaces`.

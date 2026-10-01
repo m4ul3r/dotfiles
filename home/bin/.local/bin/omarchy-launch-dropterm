@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Launch the drop-down terminal for the special:dropterm workspace.
+#
+# The window gets a dedicated app-id so the geometry rules in hypr/hyprland.lua
+# apply to it alone and not to every other terminal window. Each terminal
+# spells that flag differently, so resolve the default terminal first rather
+# than hardcoding one -- `omarchy default terminal <name>` keeps working.
+
+class="${DROPTERM_CLASS:-org.omarchy.dropterm}"
+
+case "$(omarchy-default-terminal)" in
+ghostty)
+  # gtk-single-instance defaults to "detect"; force a fresh instance so the
+  # app-id actually lands on the new window instead of an existing ghostty.
+  exec setsid uwsm-app -- ghostty --gtk-single-instance=false --class="$class"
+  ;;
+alacritty) exec setsid uwsm-app -- alacritty --class "$class" ;;
+kitty) exec setsid uwsm-app -- kitty --class "$class" ;;
+foot) exec setsid uwsm-app -- foot --app-id="$class" ;;
+*) exec setsid uwsm-app -- xdg-terminal-exec ;;
+esac

@@ -1,6 +1,8 @@
 *.swp
 *.swo
 *~
+*.bak
+*.bak.*
 .DS_Store
 Thumbs.db
 config/nvim/lazy-lock.json

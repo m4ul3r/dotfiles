@@ -84,6 +84,9 @@ alias clanker="CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 cy"
 
 alias goblin="codex --yolo"
 
+# omp: render images inline via kitty graphics protocol (herdr has kitty_graphics = true)
+alias omp="PI_FORCE_IMAGE_PROTOCOL=kitty PI_KITTY_PLACEHOLDERS=0 omp"
+
 # sshfs: beelink-home:/media/ssd/brain <-> /mnt/brain
 mount-brain() {
   [[ -d /mnt/brain ]] || sudo mkdir -p /mnt/brain
